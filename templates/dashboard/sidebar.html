@@ -34,8 +34,8 @@
             Categories
         </a>
 
-        <a href="{% url 'home' %}"
-           class="nav-link text-dark {% if request.path == '/dashboard/posts/' %}bg-warning{% endif %}">
+        <a href="{% url 'posts' %}"
+           class="nav-link text-dark {% if '/dashboard/posts/' in  request.path  %}bg-warning{% endif %}">
             Posts
         </a>
 

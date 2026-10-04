@@ -21,6 +21,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Google Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="{% static 'css/blog.css' %}" rel="stylesheet">
@@ -201,20 +203,20 @@
                     <div class="input-group">
 
                         <input
-                            class="form-control"
-                            type="text"
-                            name="keyword"
-                            value="{{ keyword }}"
-                            placeholder="Enter search term..."
-                            aria-label="Search"
-                            required
+                                class="form-control"
+                                type="text"
+                                name="keyword"
+                                value="{{ keyword }}"
+                                placeholder="Enter search term..."
+                                aria-label="Search"
+                                required
                         >
 
                         <div class="input-group-append">
 
                             <button
-                                type="submit"
-                                class="btn btn-warning">
+                                    type="submit"
+                                    class="btn btn-warning">
 
                                 Go!
 
@@ -324,8 +326,8 @@
             {% for category in categories %}
 
                 <a
-                    class="p-2 text-muted"
-                    href="/category/{{ category.id }}"
+                        class="p-2 text-muted"
+                        href="/category/{{ category.id }}"
                 >
 
                     {{ category }}

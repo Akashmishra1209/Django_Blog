@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <!-- Left Sidebar -->
+        {% include 'dashboard/sidebar.html' %}
+        <!-- Right Sidebar -->
+        <div class="col-md-9">
+            <h1 class="text-center">All Users</h1>
+            <a href="{% url 'add_user' %}" class="btn btn-dark text-light float-right mb-2">Add User</a>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Active</th>
+                    <th scope="col">Staff</th>
+                    <th scope="col">Superuser</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+
+                        <td>
+                            {% if user.is_active %}
+                                <i class="fa fa-check-square text-success"></i>
+                            {% else %}
+                                <i class="fa fa-times text-danger"></i>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if user.is_staff %}
+                                <i class="fa fa-check-square text-success"></i>
+                            {% else %}
+                                <i class="fa fa-times text-danger"></i>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if user.is_superuser %}
+                                <i class="fa fa-check-square text-success"></i>
+                            {% else %}
+                                <i class="fa fa-times text-danger"></i>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a href="{% url 'edit_user' user.id %}" class="text-decoration-none"><i
+                                    class="fa fa-edit text-success"></i> </a>&nbsp;
+                            <a href="{% url 'delete_user' user.id %}" class="text-decoration-none"><i
+                                    class="fa fa-trash text-danger"></i> </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

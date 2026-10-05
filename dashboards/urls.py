@@ -18,4 +18,10 @@ urlpatterns=[
     path('users/add',views.add_user,name='add_user'),
     path('users/edit/<int:pk>',views.edit_user,name='edit_user'),
     path('users/delete/<int:pk>',views.delete_user,name='delete_user'),
+
+    path('about/',views.about,name='about'),
+    path('socials/',views.socials,name='socials'),
+    path('social/add',views.add_social,name='add_social'),
+    path('social/edit/<int:pk>',views.edit_social,name='edit_social'),
+    path('social/delete/<int:pk>',views.delete_social,name='delete_social'),
 ]

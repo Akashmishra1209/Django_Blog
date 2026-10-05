@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+from about_us.models import About, SocialLink
 from blogs.models import Category, Blog
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
-from dashboards.forms import CategoryForm, BlogPostForm, AddUserForm, EditUserForm
-
+from dashboards.forms import CategoryForm, BlogPostForm, AddUserForm, EditUserForm, AboutUsForm, SocialForm
 
 @permission_required('blogs.view_blog', login_url='login')
 def dashboard(request):
@@ -123,3 +123,46 @@ def delete_user(request,pk):
     user = get_object_or_404(User,pk=pk)
     user.delete()
     return redirect('users')
+
+@permission_required('about_us.edit_about')
+def about(request):
+    about_details = About.objects.first()
+    if request.method == 'POST':
+        form =AboutUsForm(request.POST,instance=about_details)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    form = AboutUsForm(instance=about_details)
+    return render(request,'dashboard/about.html', {'form': form})
+
+@permission_required('about_us.view_social')
+def socials(request):
+    socials_links = SocialLink.objects.all()
+    return render(request, 'dashboard/socials.html', {'socials': socials_links})
+
+@permission_required('about_us.add_social')
+def add_social(request):
+    if request.method == 'POST':
+        form = SocialForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('socials')
+    form = SocialForm()
+    return render(request, 'dashboard/add_social.html', {'form': form})
+
+@permission_required('about_us.edit_social')
+def edit_social(request,pk):
+    social=get_object_or_404(SocialLink,pk=pk)
+    if request.method == 'POST':
+        form = SocialForm(request.POST,instance=social)
+        if form.is_valid():
+            form.save()
+            return redirect('socials')
+    form = SocialForm(instance=social)
+    return render(request, 'dashboard/edit_social.html', {'form': form,'social':social})
+
+
+def delete_social(request,pk):
+    social = get_object_or_404(SocialLink,pk=pk)
+    social.delete()
+    return redirect('socials')

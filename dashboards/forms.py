@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
+from about_us.models import About,SocialLink
 from blogs.models import Category, Blog
 
 
@@ -33,3 +33,13 @@ class EditUserForm(forms.ModelForm):
             'first_name', 'last_name', 'username', 'email', 'is_active', 'is_staff', 'is_superuser', 'groups',
             'user_permissions'
         )
+
+class AboutUsForm(forms.ModelForm):
+    class Meta:
+        model = About
+        fields = '__all__'
+
+class SocialForm(forms.ModelForm):
+    class Meta:
+        model = SocialLink
+        fields = '__all__'

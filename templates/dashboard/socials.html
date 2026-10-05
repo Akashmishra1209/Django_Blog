@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row">
+        <!-- Left Sidebar -->
+        {% include 'dashboard/sidebar.html' %}
+        <!-- Right Sidebar -->
+        <div class="col-md-9">
+            <h1 class="text-center">All Social Links</h1>
+            <a href="{% url 'add_social' %}" class="btn btn-dark text-light float-right mb-2">Add New Link</a>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Platform</th>
+                    <th scope="col">Link</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Updated At</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for social in socials %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ social.platform }}</td>
+                    <td><a href="{{ social.link }}" target="_blank">{{ social.link }}</a></td>
+                    <td>{{ social.created_at|date:"j F Y" }}</td>
+                    <td>{{ social.updated_at|date:"j F Y" }}</td>
+                    <td>
+                        <a href="{% url 'edit_social' social.id %}" class="text-decoration-none"><i class="fa fa-edit text-success"></i> </a>&nbsp;
+                        <a href="{% url 'delete_social' social.id %}" class="text-decoration-none"><i class="fa fa-trash text-danger"></i> </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

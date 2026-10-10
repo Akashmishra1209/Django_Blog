@@ -27,6 +27,13 @@
     <!-- Custom CSS -->
     <link href="{% static 'css/blog.css' %}" rel="stylesheet">
 
+    <!-- Prism -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
 
     <style>
         /* =========================================
@@ -158,6 +165,45 @@
                 margin-right: 10px;
             }
         }
+        /* Container that preserves formatting and handles overflow */
+pre {
+  background-color: #1e1e1e;
+  border: 1px solid #2d2d2d;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 1.5rem 0;
+  overflow-x: auto; /* Enables horizontal scrolling for long lines */
+}
+
+/* Inner text container */
+pre code {
+  font-family: 'Inter', 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d4d4d4;
+  direction: ltr;
+  text-align: left;
+  white-space: pre; /* Prevents text from breaking layout */
+  word-spacing: normal;
+  word-break: normal;
+}
+
+/* Optional: Custom scrollbar styling for a cleaner look */
+pre::-webkit-scrollbar {
+  height: 8px;
+}
+pre::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 0 0 8px 8px;
+}
+pre::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 4px;
+}
+pre::-webkit-scrollbar-thumb:hover {
+  background: #4f4f4f;
+}
+
     </style>
 
 </head>
@@ -166,187 +212,187 @@
 <body>
 
 <div class="container">
-{% if not user.is_superuser %}
-    <!-- =========================================
-         HEADER
-    ========================================== -->
+    {% if not '/dashboard' in request.path %}
+        <!-- =========================================
+             HEADER
+        ========================================== -->
 
-    <header class="blog-header py-3 border-bottom">
+        <header class="blog-header py-3 border-bottom">
 
-        <div class="row align-items-center">
+            <div class="row align-items-center">
 
-            <!-- =================================
-                 LOGO
-            ================================== -->
+                <!-- =================================
+                     LOGO
+                ================================== -->
 
-            <div class="col-12 col-md-4 text-center text-md-left mb-2 mb-md-0">
+                <div class="col-12 col-md-4 text-center text-md-left mb-2 mb-md-0">
 
-                <a class="blog-header-logo text-dark"
-                   href="/">
+                    <a class="blog-header-logo text-dark"
+                       href="/">
 
-                    {{ about.site_name }}
+                        {{ about.site_name }}
 
-                </a>
+                    </a>
 
-            </div>
+                </div>
 
 
-            <!-- =================================
-                 SEARCH
-            ================================== -->
+                <!-- =================================
+                     SEARCH
+                ================================== -->
 
-            <div class="col-12 col-md-4 mb-2 mb-md-0">
+                <div class="col-12 col-md-4 mb-2 mb-md-0">
 
-                <form action="{% url 'search' %}"
-                      method="GET">
+                    <form action="{% url 'search' %}"
+                          method="GET">
 
-                    <div class="input-group">
+                        <div class="input-group">
 
-                        <input
-                                class="form-control"
-                                type="text"
-                                name="keyword"
-                                value="{{ keyword }}"
-                                placeholder="Enter search term..."
-                                aria-label="Search"
-                                required
-                        >
+                            <input
+                                    class="form-control"
+                                    type="text"
+                                    name="keyword"
+                                    value="{{ keyword }}"
+                                    placeholder="Enter search term..."
+                                    aria-label="Search"
+                                    required
+                            >
 
-                        <div class="input-group-append">
+                            <div class="input-group-append">
 
-                            <button
-                                    type="submit"
-                                    class="btn btn-warning">
+                                <button
+                                        type="submit"
+                                        class="btn btn-warning">
 
-                                Go!
+                                    Go!
 
-                            </button>
+                                </button>
+
+                            </div>
 
                         </div>
 
-                    </div>
+                    </form>
 
-                </form>
-
-            </div>
+                </div>
 
 
-            <!-- =================================
-                 AUTH / USER
-            ================================== -->
+                <!-- =================================
+                     AUTH / USER
+                ================================== -->
 
-            <div class="col-12 col-md-4
+                <div class="col-12 col-md-4
                         d-flex
                         justify-content-center
                         justify-content-md-end
                         align-items-center">
 
-                {% if not user.is_authenticated %}
+                    {% if not user.is_authenticated %}
 
-                    <!-- LOGIN -->
+                        <!-- LOGIN -->
 
-                    <a class="btn btn-warning"
-                       href="{% url 'login' %}">
+                        <a class="btn btn-warning"
+                           href="{% url 'login' %}">
 
-                        Login
+                            Login
 
-                    </a>
-
-
-                    <!-- REGISTER -->
-
-                    <a class="btn btn-outline-secondary ml-2"
-                       href="{% url 'register' %}">
-
-                        Register
-
-                    </a>
+                        </a>
 
 
-                {% else %}
+                        <!-- REGISTER -->
 
-                    <div class="user-box">
+                        <a class="btn btn-outline-secondary ml-2"
+                           href="{% url 'register' %}">
 
-                        <!-- USER AVATAR -->
+                            Register
 
-                        <div class="user-avatar">
-
-                            {{ user.username|first|upper }}
-
-                        </div>
+                        </a>
 
 
-                        <!-- USERNAME -->
+                    {% else %}
 
-                        <span class="username">
+                        <div class="user-box">
+
+                            <!-- USER AVATAR -->
+
+                            <div class="user-avatar">
+
+                                {{ user.username|first|upper }}
+
+                            </div>
+
+
+                            <!-- USERNAME -->
+
+                            <span class="username">
 
                             {{ user.username }}
 
                         </span>
 
 
-                        <!-- LOGOUT -->
+                            <!-- LOGOUT -->
 
-                        <a href="{% url 'logout' %}"
-                           class="btn btn-sm btn-outline-danger px-3">
+                            <a href="{% url 'logout' %}"
+                               class="btn btn-sm btn-outline-danger px-3">
 
-                            Logout
+                                Logout
 
-                        </a>
+                            </a>
 
 
-                        <!-- DASHBOARD -->
+                            <!-- DASHBOARD -->
 
-                        <a href="{% url 'dashboard' %}"
-                           class="btn btn-sm btn-outline-primary px-3 ml-1">
+                            <a href="{% url 'dashboard' %}"
+                               class="btn btn-sm btn-outline-primary px-3 ml-1">
 
-                            Dashboard
+                                Dashboard
 
-                        </a>
+                            </a>
 
-                    </div>
+                        </div>
 
-                {% endif %}
+                    {% endif %}
+
+                </div>
 
             </div>
 
+        </header>
+
+
+        <!-- =========================================
+             CATEGORY NAVIGATION
+        ========================================== -->
+
+        <div class="nav-scroller py-2 mb-4 border-bottom">
+
+            <nav class="nav justify-content-start">
+
+                {% for category in categories %}
+
+                    <a
+                            class="p-2 text-muted"
+                            href="/category/{{ category.id }}"
+                    >
+
+                        {{ category }}
+
+                    </a>
+
+                {% endfor %}
+
+            </nav>
+
         </div>
 
-    </header>
-
-
-    <!-- =========================================
-         CATEGORY NAVIGATION
-    ========================================== -->
-
-    <div class="nav-scroller py-2 mb-4 border-bottom">
-
-        <nav class="nav justify-content-start">
-
-            {% for category in categories %}
-
-                <a
-                        class="p-2 text-muted"
-                        href="/category/{{ category.id }}"
-                >
-
-                    {{ category }}
-
-                </a>
-
-            {% endfor %}
-
-        </nav>
-
-    </div>
-
-{% else %}
-    <header class="d-flex justify-content-center py-3">
-      <div class="nav nav-pills">
-          <h1>Admin Panel</h1>
-      </div>
-    </header>
-{% endif %}
+    {% else %}
+        <header class="d-flex justify-content-center py-3">
+            <div class="nav nav-pills">
+                <h1>Admin Panel</h1>
+            </div>
+        </header>
+    {% endif %}
     <!-- =========================================
          MAIN CONTENT
     ========================================== -->

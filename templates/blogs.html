@@ -27,7 +27,7 @@
 
                 <section class="mb-5 post-body" style="font-size:18px; line-height:1.6;">
                     <p class="lead mb-4">{{ single_blog.short_description }}</p>
-                    <div>{{ single_blog.blog_body|linebreaks }}</div>
+                    <div>{{ single_blog.blog_body|safe }}</div>
                 </section>
             </article>
 

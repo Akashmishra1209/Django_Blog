@@ -10,9 +10,13 @@ from dashboards.forms import CategoryForm, BlogPostForm, AddUserForm, EditUserFo
 def dashboard(request):
     category_count = Category.objects.count()
     posts_count = Blog.objects.count()
+    users_count = User.objects.count()
+    links_count = SocialLink.objects.count()
     return render(request, 'dashboard/dashboard.html', {
         'category_count': category_count,
-        'posts_count': posts_count
+        'posts_count': posts_count,
+        'total_users':users_count,
+        'total_links':links_count
     })
 
 

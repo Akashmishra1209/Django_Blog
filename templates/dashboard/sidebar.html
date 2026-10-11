@@ -13,7 +13,10 @@
         <div class="font-weight-bold text-dark mb-3">
             {{ user.first_name }} {{ user.last_name }}
         </div>
-
+        <a href="{% url 'home' %}" target="_blank"
+           class="btn btn-sm btn-primary rounded-pill w-100 mb-2">
+            Visit Site
+        </a>
         <a href="{% url 'logout' %}"
            class="btn btn-sm btn-outline-danger rounded-pill w-100 mb-2">
             Logout

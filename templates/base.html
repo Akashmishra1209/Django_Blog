@@ -75,8 +75,8 @@
 
             width: 100%;
 
-            padding-bottom: 0.5rem;
-            margin-top: -1px;
+{#            padding-bottom: 0.5rem;#}
+{#            margin-top: -1px;#}
 
             /* Important */
             overflow: visible;
@@ -87,8 +87,8 @@
         .nav-scroller .nav-link {
             flex-shrink: 0;
 
-            margin-right: 20px;
-            margin-bottom: 5px;
+{#            margin-right: 20px;#}
+{#            margin-bottom: 5px;#}
         }
 
 
@@ -165,8 +165,13 @@
             }
         }
         code{
-        border-radius:10px;
+            border-radius:10px;
         }
+        .form-control:focus {
+            border-color: #ced4da; /* Reverts to the default Bootstrap light gray border */
+            box-shadow: none;      /* Removes the blue focus glow */
+        }
+
     </style>
 
 </head>
@@ -328,26 +333,18 @@
              CATEGORY NAVIGATION
         ========================================== -->
 
-        <div class="nav-scroller py-2 mb-4 border-bottom">
-
+        <!-- py-1 (कम हाइट) और mb-2 (नीचे कम गैप) -->
+        <div class="nav-scroller py-1 mb-2 border-bottom">
             <nav class="nav justify-content-start">
-
                 {% for category in categories %}
-
-                    <a
-                            class="p-2 text-muted"
-                            href="/category/{{ category.id }}"
-                    >
-
+                    <!-- यहाँ भी py-1 कर दें ताकि लिंक पतले हो जाएं -->
+                    <a class="py-1 pr-3 pl-0 text-muted" href="/category/{{ category.id }}">
                         {{ category }}
-
                     </a>
-
                 {% endfor %}
-
             </nav>
-
         </div>
+
 
     {% else %}
         <header class="d-flex justify-content-center py-3">

@@ -1,5 +1,88 @@
 {% extends 'base.html' %}
 {% block content %}
+
+    <!-- EasyMDE CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+
+<style>
+    /* EasyMDE editor */
+    .EasyMDEContainer {
+        width: 100%;
+    }
+
+    .EasyMDEContainer .CodeMirror {
+        font-size: 16px;
+        line-height: 1.6;
+        border-radius: 5px;
+    }
+
+    /* Preview area */
+    .EasyMDEContainer .editor-preview,
+    .EasyMDEContainer .editor-preview-side {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.7;
+        padding: 20px;
+    }
+
+    /* Headings */
+    .editor-preview h1,
+    .editor-preview-side h1 {
+        font-size: 2rem;
+        margin-bottom: 16px;
+    }
+
+    /* Code blocks */
+    .editor-preview pre,
+    .editor-preview-side pre {
+        background: #f4f4f4;
+        color: #212529;
+        padding: 16px;
+        border-radius: 6px;
+        overflow-x: auto;
+        border: 1px solid #dee2e6;
+    }
+
+    .editor-preview pre code,
+    .editor-preview-side pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        white-space: pre;
+        font-family: Consolas, monospace;
+    }
+
+    /* Inline code */
+    .editor-preview :not(pre) > code,
+    .editor-preview-side :not(pre) > code {
+        background: #f1f3f5;
+        color: #d63384;
+        padding: 2px 5px;
+        border-radius: 4px;
+    }
+
+    /* Blockquotes */
+    .editor-preview blockquote,
+    .editor-preview-side blockquote {
+        border-left: 4px solid #0d6efd;
+        padding: 10px 16px;
+        margin-left: 0;
+        color: #555;
+        background: #f8f9fa;
+    }
+
+    /* Images */
+    .editor-preview img,
+    .editor-preview-side img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+    <!-- EasyMDE JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
     {% load crispy_forms_tags %}
     <div class="row">
         <!-- Left Sidebar -->
@@ -16,4 +99,26 @@
             </div>
         </div>
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const blogBody = document.getElementById("id_blog_body");
+
+        if (blogBody) {
+            new EasyMDE({
+                element: blogBody,
+                spellChecker: false,
+                minHeight: "350px",
+                placeholder: "Write your blog content here...",
+                status: ["lines", "words"],
+                renderingConfig: {
+                    singleLineBreaks: false
+                }
+            });
+        }
+    });
+</script>
+
 {% endblock %}

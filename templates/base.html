@@ -198,6 +198,8 @@
                     <a class="blog-header-logo text-dark"
                        href="/">
                         {{ about.site_icon_svg|safe }}
+                        {{ about.site_icon_svg|safe }}
+                        {{ about.site_icon_svg|safe }}
                         {{ about.site_name }}
 
                     </a>
@@ -344,14 +346,6 @@
                 {% endfor %}
             </nav>
         </div>
-
-
-    {% else %}
-        <header class="d-flex justify-content-center py-3">
-            <div class="nav nav-pills">
-                <h1>Admin Panel</h1>
-            </div>
-        </header>
     {% endif %}
     <!-- =========================================
          MAIN CONTENT

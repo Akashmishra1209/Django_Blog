@@ -1,68 +1,152 @@
-<!-- Sidebar -->
-<div class="col-md-3">
+<style>
+    /* Base template ke container ko full-width karne ke liye (sirf dashboard pages par) */
+    .container {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin: 0 !important;
+    }
 
-    <!-- User -->
-    <div class="bg-light rounded shadow-sm p-3 mb-3 text-center">
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
 
-        <div class="bg-warning text-dark rounded-circle
-                    d-flex align-items-center justify-content-center mx-auto mb-2"
-             style="width: 45px; height: 45px; font-weight: 600;">
-            {{ user.username|first|upper }}
+    /* Standard Fixed Left Sidebar */
+    .standard-sidebar {
+        width: 260px;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1.25rem;
+        z-index: 1040;
+        overflow-y: auto;
+    }
+
+    /* Right side content (col-md-9) ko sidebar ke hisab se adjust karna */
+    .col-md-9 {
+        margin-left: 260px !important;
+        flex: 0 0 calc(100% - 260px) !important;
+        max-width: calc(100% - 260px) !important;
+        padding: 2rem !important;
+    }
+
+    /* Sidebar Navigation Links Styling */
+    .standard-sidebar .nav-link {
+        color: #333;
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-bottom: 4px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .standard-sidebar .nav-link:hover {
+        background-color: #e9ecef;
+    }
+
+    .standard-sidebar .nav-link.bg-warning {
+        color: #000 !important;
+        font-weight: 600;
+    }
+
+    /* Responsive: Mobile screens par wapas normal stack hone ke liye */
+    @media (max-width: 768px) {
+        .standard-sidebar {
+            position: relative;
+            width: 100%;
+            height: auto;
+            border-right: none;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .col-md-9 {
+            margin-left: 0 !important;
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            padding: 1rem !important;
+        }
+    }
+</style>
+
+<!-- Sidebar HTML -->
+<div class="standard-sidebar">
+
+    <!-- Top Section: Brand / Navigation Menu -->
+    <div>
+        <div class="px-2 mb-4 d-flex align-items-center">
+            <h5 class="font-weight-bold text-dark mb-0 fs-6">Admin Panel</h5>
         </div>
 
-        <div class="font-weight-bold text-dark mb-3">
-            {{ user.first_name }} {{ user.last_name }}
+        <div class="nav flex-column nav-pills">
+            <a href="{% url 'dashboard' %}"
+               class="nav-link {% if request.path == '/dashboard/' %}bg-warning{% endif %}">
+                Dashboard
+            </a>
+
+            {% if perms.auth.view_user %}
+                <a href="{% url 'users' %}"
+                   class="nav-link {% if '/dashboard/users/' in request.path %}bg-warning{% endif %}">
+                    Users
+                </a>
+            {% endif %}
+
+            <a href="{% url 'categories' %}"
+               class="nav-link {% if '/dashboard/categories/' in request.path %}bg-warning{% endif %}">
+                Categories
+            </a>
+
+            <a href="{% url 'posts' %}"
+               class="nav-link {% if '/dashboard/posts/' in request.path %}bg-warning{% endif %}">
+                Posts
+            </a>
+
+            {% if perms.about_us.view_about %}
+                <a href="{% url 'about' %}"
+                   class="nav-link {% if '/dashboard/about/' in request.path %}bg-warning{% endif %}">
+                    About
+                </a>
+            {% endif %}
+
+            {% if perms.about_us.edit_social %}
+                <a href="{% url 'socials' %}"
+                   class="nav-link {% if '/dashboard/social' in request.path %}bg-warning{% endif %}">
+                    Social
+                </a>
+            {% endif %}
         </div>
-        <a href="{% url 'home' %}" target="_blank"
-           class="btn btn-sm btn-primary rounded-pill w-100 mb-2">
-            Visit Site
-        </a>
-        <a href="{% url 'logout' %}"
-           class="btn btn-sm btn-outline-danger rounded-pill w-100 mb-2">
-            Logout
-        </a>
     </div>
 
+    <!-- Bottom Section: User Profile & Actions (Like Gemini Sidebar) -->
+    <div class="border-top pt-3 mt-3">
+        <div class="d-flex align-items-center mb-3 px-1">
+            <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center mr-2"
+                 style="width: 38px; height: 38px; font-weight: 600; flex-shrink: 0;">
+                {{ user.username|first|upper }}
+            </div>
+            <div class="text-truncate ml-2">
+                <div class="font-weight-bold text-dark text-truncate" style="font-size: 0.95rem;">
+                    {{ user.first_name }} {{ user.last_name }}
+                </div>
+                <small class="text-muted d-block">@{{ user.username }}</small>
+            </div>
+        </div>
 
-    <!-- Sidebar Menu -->
-    <div class="nav flex-column nav-pills bg-light rounded shadow-sm p-2">
-
-        <a href="{% url 'dashboard' %}"
-           class="nav-link text-dark {% if request.path == '/dashboard/' %}bg-warning{% endif %}">
-            Dashboard
-        </a>
-
-        {% if perms.auth.view_user %}
-            <a href="{% url 'users' %}"
-               class="nav-link text-dark {% if '/dashboard/users/' in request.path %}bg-warning{% endif %}">
-                Users
+        <div class="d-flex" style="gap: 8px;">
+            <a href="{% url 'home' %}" target="_blank"
+               class="btn btn-sm btn-primary rounded-pill flex-fill">
+                Visit Site
             </a>
-        {% endif %}
-
-        <a href="{% url 'categories' %}"
-           class="nav-link text-dark {% if '/dashboard/categories/' in request.path %}bg-warning{% endif %}">
-            Categories
-        </a>
-
-        <a href="{% url 'posts' %}"
-           class="nav-link text-dark {% if '/dashboard/posts/' in  request.path %}bg-warning{% endif %}">
-            Posts
-        </a>
-
-        {% if perms.about_us.view_about %}
-            <a href="{% url 'about' %}"
-               class="nav-link text-dark {% if '/dashboard/about/' in  request.path %}bg-warning{% endif %}">
-                About
+            <a href="{% url 'logout' %}"
+               class="btn btn-sm btn-outline-danger rounded-pill flex-fill">
+                Logout
             </a>
-        {% endif %}
-        {% if perms.about_us.edit_social %}
-            <a href="{% url 'socials' %}"
-               class="nav-link text-dark {% if '/dashboard/social' in  request.path %}bg-warning{% endif %}">
-                Social
-            </a>
-        {% endif %}
-
-
+        </div>
     </div>
 
 </div>

@@ -75,19 +75,19 @@
 
             width: 100%;
 
-{#            padding-bottom: 0.5rem;#}
+        {#            padding-bottom: 0.5rem;#}
 {#            margin-top: -1px;#}
 
-            /* Important */
-            overflow: visible;
-            white-space: normal;
-        }
+        /* Important */
+        overflow: visible;
+        white-space: normal;
+    }
 
-        .nav-scroller .nav > a,
-        .nav-scroller .nav-link {
-            flex-shrink: 0;
+    .nav-scroller .nav > a,
+    .nav-scroller .nav-link {
+        flex-shrink: 0;
 
-{#            margin-right: 20px;#}
+        {#            margin-right: 20px;#}
 {#            margin-bottom: 5px;#}
         }
 
@@ -197,7 +197,7 @@
 
                     <a class="blog-header-logo text-dark"
                        href="/">
-
+                        {{ about.site_icon_svg|safe }}
                         {{ about.site_name }}
 
                     </a>

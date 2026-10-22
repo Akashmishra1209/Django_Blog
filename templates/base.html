@@ -36,6 +36,25 @@
 
     <style>
         /* =========================================
+           STICKY HEADER (sirf header, categories nahi)
+        ========================================= */
+
+        .site-navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            background: #fff;           /* warna scroll hota content peeche dikhega */
+        }
+
+        /* Mobile par header 3 rows ka ho jata hai, isliye sticky nahi */
+        @media (max-width: 767.98px) {
+            .site-navbar {
+                position: static;
+            }
+        }
+
+
+        /* =========================================
            BLOG HEADER
         ========================================= */
 
@@ -51,44 +70,28 @@
 
 
         /* =========================================
-           CATEGORY NAVIGATION
-           No Horizontal Scroll
-           Categories will wrap to next line
+           CATEGORY NAVIGATION (sticky nahi, wrap hoti hain)
         ========================================= */
 
         .nav-scroller {
             position: relative;
             z-index: 2;
-
             width: 100%;
             height: auto;
-
-            /* Important */
             overflow: visible;
         }
 
         .nav-scroller .nav {
             display: flex;
-
-            /* Allow categories to move to next line */
             flex-wrap: wrap;
-
             width: 100%;
+            overflow: visible;
+            white-space: normal;
+        }
 
-        {#            padding-bottom: 0.5rem;#}
-{#            margin-top: -1px;#}
-
-        /* Important */
-        overflow: visible;
-        white-space: normal;
-    }
-
-    .nav-scroller .nav > a,
-    .nav-scroller .nav-link {
-        flex-shrink: 0;
-
-        {#            margin-right: 20px;#}
-{#            margin-bottom: 5px;#}
+        .nav-scroller .nav > a,
+        .nav-scroller .nav-link {
+            flex-shrink: 0;
         }
 
 
@@ -99,40 +102,29 @@
         .user-box {
             display: flex;
             align-items: center;
-
             padding: 8px 12px;
-
             background: #f8f9fa;
-
             border-radius: 50px;
-
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .user-avatar {
             width: 34px;
             height: 34px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             margin-right: 8px;
-
             background: #ffc107;
             color: #212529;
-
             border-radius: 50%;
-
             font-weight: 600;
         }
 
         .username {
             font-weight: 700;
             color: #212529;
-
             margin-right: 12px;
-
             text-transform: capitalize;
         }
 
@@ -164,14 +156,15 @@
                 margin-right: 10px;
             }
         }
-        code{
-            border-radius:10px;
-        }
-        .form-control:focus {
-            border-color: #ced4da; /* Reverts to the default Bootstrap light gray border */
-            box-shadow: none;      /* Removes the blue focus glow */
+
+        code {
+            border-radius: 10px;
         }
 
+        .form-control:focus {
+            border-color: #ced4da;
+            box-shadow: none;
+        }
     </style>
 
 </head>
@@ -181,195 +174,124 @@
 
 <div class="container">
     {% if not '/dashboard' in request.path %}
+
         <!-- =========================================
-             HEADER
+             STICKY HEADER
         ========================================== -->
+        <div class="site-navbar">
+            <header class="blog-header py-3 border-bottom">
 
-        <header class="blog-header py-3 border-bottom">
+                <div class="row align-items-center">
 
-            <div class="row align-items-center">
+                    <!-- LOGO -->
+                    <div class="col-12 col-md-4 text-center text-md-left mb-2 mb-md-0">
+                        <a class="blog-header-logo text-dark" href="/">
+                            {{ about.site_icon_svg|safe }}
+                            {{ about.site_name }}
+                        </a>
+                    </div>
 
-                <!-- =================================
-                     LOGO
-                ================================== -->
+                    <!-- SEARCH -->
+                    <div class="col-12 col-md-4 mb-2 mb-md-0">
+                        <form action="{% url 'search' %}" method="GET">
+                            <div class="input-group">
+                                <input class="form-control"
+                                       type="text"
+                                       name="keyword"
+                                       value="{{ keyword }}"
+                                       placeholder="Enter search term..."
+                                       aria-label="Search"
+                                       required>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-warning">Go!</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
 
-                <div class="col-12 col-md-4 text-center text-md-left mb-2 mb-md-0">
+                    <!-- AUTH / USER -->
+                    <div class="col-12 col-md-4
+                                d-flex
+                                justify-content-center
+                                justify-content-md-end
+                                align-items-center">
 
-                    <a class="blog-header-logo text-dark"
-                       href="/">
-                        {{ about.site_icon_svg|safe }}
-                        {{ about.site_icon_svg|safe }}
-                        {{ about.site_icon_svg|safe }}
-                        {{ about.site_name }}
+                        {% if not user.is_authenticated %}
 
-                    </a>
+                            <a class="btn btn-warning" href="{% url 'login' %}">Login</a>
+                            <a class="btn btn-outline-secondary ml-2" href="{% url 'register' %}">Register</a>
 
-                </div>
+                        {% else %}
 
-
-                <!-- =================================
-                     SEARCH
-                ================================== -->
-
-                <div class="col-12 col-md-4 mb-2 mb-md-0">
-
-                    <form action="{% url 'search' %}"
-                          method="GET">
-
-                        <div class="input-group">
-
-                            <input
-                                    class="form-control"
-                                    type="text"
-                                    name="keyword"
-                                    value="{{ keyword }}"
-                                    placeholder="Enter search term..."
-                                    aria-label="Search"
-                                    required
-                            >
-
-                            <div class="input-group-append">
-
-                                <button
-                                        type="submit"
-                                        class="btn btn-warning">
-
-                                    Go!
-
-                                </button>
-
+                            <div class="user-box">
+                                <div class="user-avatar">{{ user.username|first|upper }}</div>
+                                <span class="username">{{ user.username }}</span>
+                                <a href="{% url 'logout' %}"
+                                   class="btn btn-sm btn-outline-danger px-3">Logout</a>
+                                <a href="{% url 'dashboard' %}"
+                                   class="btn btn-sm btn-outline-primary px-3 ml-1">Dashboard</a>
                             </div>
 
-                        </div>
+                        {% endif %}
 
-                    </form>
-
-                </div>
-
-
-                <!-- =================================
-                     AUTH / USER
-                ================================== -->
-
-                <div class="col-12 col-md-4
-                        d-flex
-                        justify-content-center
-                        justify-content-md-end
-                        align-items-center">
-
-                    {% if not user.is_authenticated %}
-
-                        <!-- LOGIN -->
-
-                        <a class="btn btn-warning"
-                           href="{% url 'login' %}">
-
-                            Login
-
-                        </a>
-
-
-                        <!-- REGISTER -->
-
-                        <a class="btn btn-outline-secondary ml-2"
-                           href="{% url 'register' %}">
-
-                            Register
-
-                        </a>
-
-
-                    {% else %}
-
-                        <div class="user-box">
-
-                            <!-- USER AVATAR -->
-
-                            <div class="user-avatar">
-
-                                {{ user.username|first|upper }}
-
-                            </div>
-
-
-                            <!-- USERNAME -->
-
-                            <span class="username">
-
-                            {{ user.username }}
-
-                        </span>
-
-
-                            <!-- LOGOUT -->
-
-                            <a href="{% url 'logout' %}"
-                               class="btn btn-sm btn-outline-danger px-3">
-
-                                Logout
-
-                            </a>
-
-
-                            <!-- DASHBOARD -->
-
-                            <a href="{% url 'dashboard' %}"
-                               class="btn btn-sm btn-outline-primary px-3 ml-1">
-
-                                Dashboard
-
-                            </a>
-
-                        </div>
-
-                    {% endif %}
+                    </div>
 
                 </div>
 
-            </div>
-
-        </header>
+            </header>
+        </div>
 
 
         <!-- =========================================
-             CATEGORY NAVIGATION
+             CATEGORY NAVIGATION (normal scroll)
         ========================================== -->
-
-        <!-- py-1 (कम हाइट) और mb-2 (नीचे कम गैप) -->
         <div class="nav-scroller py-1 mb-2 border-bottom">
             <nav class="nav justify-content-start">
                 {% for category in categories %}
-                    <!-- यहाँ भी py-1 कर दें ताकि लिंक पतले हो जाएं -->
                     <a class="py-1 pr-3 pl-0 text-muted" href="/category/{{ category.id }}">
                         {{ category }}
                     </a>
                 {% endfor %}
             </nav>
         </div>
+
     {% endif %}
+
     <!-- =========================================
          MAIN CONTENT
     ========================================== -->
-
     <main role="main">
-
         {% block content %}
-
         {% endblock %}
-
     </main>
-
 
 </div>
 
 
 <!-- =========================================
-     OPTIONAL BOOTSTRAP JS
+     BOOTSTRAP JS
 ========================================== -->
-
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Sticky header ki height measure karo, taaki sidebar uske neeche rahe -->
+<script>
+    (function () {
+        var nav = document.querySelector('.site-navbar');
+
+        function setNavHeight() {
+            var h = 0;
+            if (nav && getComputedStyle(nav).position === 'sticky') {
+                h = nav.offsetHeight;
+            }
+            document.documentElement.style.setProperty('--navbar-h', h + 'px');
+        }
+
+        setNavHeight();
+        window.addEventListener('resize', setNavHeight);
+        window.addEventListener('load', setNavHeight);
+    })();
+</script>
 
 </body>
 

@@ -2,16 +2,103 @@
 {% block title %}{{ single_blog.title }}{% endblock %}
 {% load markdown_extras %}
 {% block content %}
+
+    <style>
+        /* ---------- Sticky sidebar (sirf desktop par) ---------- */
+        .sidebar-sticky {
+            position: sticky;
+            top: 20px;                      /* fixed navbar ho to isse badhao, jaise 76px */
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar-sticky {
+                position: static;
+                max-height: none;
+                overflow: visible;
+            }
+        }
+
+        /* ---------- Categories + Social links: grid pills ---------- */
+        .pill-grid a {
+            display: block;
+            padding: 0.4rem 0.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #343a40;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: background-color .15s ease, border-color .15s ease;
+        }
+        .pill-grid a:hover {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            text-decoration: none;
+        }
+
+        /* ---------- Related blogs (future use) ---------- */
+        .related-list .list-group-item {
+            border-left: 3px solid transparent;
+            padding: 0.6rem 0.75rem;
+            line-height: 1.35;
+            transition: background-color .15s ease, border-color .15s ease;
+        }
+        .related-list .list-group-item:hover {
+            background-color: #fff8e1;
+            border-left-color: #ffc107;
+            text-decoration: none;
+        }
+
+        /* ---------- Post body responsive ---------- */
+        .post-body {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+        .post-body img,
+        .post-body video,
+        .post-body iframe {
+            max-width: 100%;
+            height: auto;
+        }
+        .post-body pre {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        .post-body table {
+            display: block;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        /* Choti screens par thoda chhota text */
+        @media (max-width: 575.98px) {
+            .post-body { font-size: 16px !important; }
+            .post-title { font-size: 1.6rem; }
+        }
+
+    .sidebar-sticky {
+    position: sticky;
+    top: calc(var(--navbar-h, 0px) + 20px);
+    max-height: calc(100vh - var(--navbar-h, 0px) - 40px);
+    overflow-y: auto;
+}
+    </style>
+
     <div class="row">
 
         <!-- Post -->
         <div class="col-lg-8">
             <article>
                 <header class="mb-4">
-                    <h1 class="font-weight-bold mb-1">{{ single_blog.title }}</h1>
+                    <h1 class="font-weight-bold mb-1 post-title">{{ single_blog.title }}</h1>
                     <div class="text-muted font-italic mb-2">
-                        Posted on {{ single_blog.created_at|date:'d F Y' }} by <span class="text-capitalize"
-                                                                                     class="font-weight:500px;">{{ single_blog.author }}</span>
+                        Posted on {{ single_blog.created_at|date:'d F Y' }} by
+                        <span class="text-capitalize fw-bold font-weight-bold">
+                        {{ single_blog.author }}</span>
                     </div>
                     <a class="badge badge-warning text-dark"
                        href="{% url 'posts_by_category' single_blog.category.id %}">
@@ -28,7 +115,7 @@
 
                 <section class="mb-5 post-body" style="font-size:18px; line-height:1.6;">
                     <p class="lead mb-4">{{ single_blog.short_description }}</p>
-                    <div style="white-space: pre-line;">{{ single_blog.blog_body|convert_markdown_to_html|safe   }}</div>
+                    <div class="" style="white-space: pre-line; font-size:clamp(1em,1.5vw,2rem);">{{ single_blog.blog_body|convert_markdown_to_html|safe }}</div>
                 </section>
             </article>
 
@@ -67,36 +154,74 @@
         </div>
 
         <!-- Sidebar -->
-        <aside class="col-lg-4 blog-sidebar">
+        <aside class="col-lg-4 blog-sidebar mt-4 mt-lg-0">
+            <div class="sidebar-sticky">
 
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h4 class="font-italic">Categories</h4>
-                    <div class="row">
-                        {% for cat in categories %}
-                            <div class="col-6 mb-2">
-                                <a href="{% url 'posts_by_category' cat.id %}">{{ cat.category_name }}</a>
-                            </div>
-                        {% endfor %}
+                {# ---- Related Blogs: future use ke liye comment. Use karna ho to neeche ke comment tags hata do ---- #}
+                {% comment %}
+                {% if related_blogs %}
+                    <div class="card mb-4">
+                        <div class="card-body pb-2">
+                            <h4 class="font-italic mb-3">Related Blogs</h4>
+                        </div>
+                        <div class="list-group list-group-flush related-list">
+                            {% for blog in related_blogs %}
+                                <a href="{% url 'blogs' blog.id %}"
+                                   class="list-group-item list-group-item-action">
+                                    {{ blog.title }}
+                                </a>
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
-            </div>
+                {% endif %}
+                {% endcomment %}
 
-            <div class="p-3 mb-4 bg-light rounded">
-                <h4 class="font-italic">{{ about.about_heading }}</h4>
-                <p class="mb-0">{{ about.about_text }}</p>
-            </div>
-            {% if social_links %}
-                <div class="p-3">
-                    <h4 class="font-italic">Follow Us</h4>
-                    <ol class="list-unstyled mb-0">
-                        {% for social_link in social_links %}
-                            <li><a href="{{ social_link.link }}">{{ social_link.platform }}</a></li>
-                        {% endfor %}
-                    </ol>
-                </div>
-            {% endif %}
+                <!-- Categories -->
+                {% if categories %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="font-italic mb-3">Categories</h4>
+                            <div class="row pill-grid">
+                                {% for cat in categories %}
+                                    <div class="col-6 col-md-4 col-lg-6 mb-2">
+                                        <a href="{% url 'posts_by_category' cat.id %}"
+                                           title="{{ cat.category_name }}">
+                                            {{ cat.category_name }}
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
 
+                <!-- About -->
+                <div class="p-3 mb-4 bg-light rounded">
+                    <h4 class="font-italic">{{ about.about_heading }}</h4>
+                    <p class="mb-0">{{ about.about_text }}</p>
+                </div>
+
+                <!-- Social links -->
+                {% if social_links %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="font-italic mb-3">Follow Us</h4>
+                            <div class="row pill-grid">
+                                {% for social_link in social_links %}
+                                    <div class="col-6 col-md-4 col-lg-6 mb-2">
+                                        <a href="{{ social_link.link }}" target="_blank"
+                                           rel="noopener noreferrer"
+                                           title="{{ social_link.platform }}">
+                                            {{ social_link.platform }}
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
         </aside>
 
     </div>

@@ -95,15 +95,42 @@
             <article>
                 <header class="mb-4">
                     <h1 class="font-weight-bold mb-1 post-title">{{ single_blog.title }}</h1>
-                    <div class="text-muted font-italic mb-2">
-                        Posted on {{ single_blog.created_at|date:'d F Y' }} by
-                        <span class="text-capitalize fw-bold font-weight-bold">
-                        {{ single_blog.author }}</span>
-                    </div>
-                    <a class="badge badge-warning text-dark"
-                       href="{% url 'posts_by_category' single_blog.category.id %}">
+
+
+                    <div class="d-flex flex-wrap align-items-center text-muted"
+                         style="gap:0.5rem 1.25rem; font-size:0.9rem;">
+
+                        <!-- Author -->
+                        <span class="d-inline-flex align-items-center">
+        <span class="bg-primary text-white d-inline-flex align-items-center justify-content-center rounded-circle"
+              style="width:30px; height:30px; font-size:0.8rem; font-weight:600; margin-right:0.5rem;">
+            {{ single_blog.author.username |slice:":1" | upper }}
+        </span>
+        <span class="text-capitalize text-dark" style="font-weight:600;">
+            {{ single_blog.author }}
+        </span>
+    </span>
+
+                        <!-- Date -->
+                        <span class="d-inline-flex align-items-center">
+        <i class="fa fa-calendar text-primary" style="margin-right:0.4rem;"></i>
+        {{ single_blog.created_at|date:'d F Y' }}
+    </span>
+
+                        <!-- Views -->
+                        <span class="d-inline-flex align-items-center">
+        <i class="fa fa-eye text-primary" style="margin-right:0.4rem;"></i>
+        {{ single_blog.visits }} views
+    </span>
+                        <span>
+             <a class="badge badge-warning text-dark p-1"
+                href="{% url 'posts_by_category' single_blog.category.id %}">
                         {{ single_blog.category }}
                     </a>
+</span>
+                    </div>
+
+
                 </header>
 
                 {% if single_blog.featured_image %}
@@ -115,7 +142,8 @@
 
                 <section class="mb-5 post-body" style="font-size:18px; line-height:1.6;">
                     <p class="lead mb-4">{{ single_blog.short_description }}</p>
-                    <div class="" style="white-space: pre-line; font-size:clamp(1em,1.5vw,2rem);">{{ single_blog.blog_body|convert_markdown_to_html|safe }}</div>
+                    <div class=""
+                         style="white-space: pre-line; font-size:clamp(1em,1.5vw,2rem);">{{ single_blog.blog_body|convert_markdown_to_html|safe }}</div>
                 </section>
             </article>
 

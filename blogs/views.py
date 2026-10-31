@@ -14,6 +14,8 @@ def blogs(request, slug):
     single_blog = get_object_or_404(Blog, slug=slug, status='Published')
     related_blogs = Blog.objects.filter(status='Published', category=single_blog.category).order_by('-updated_at')[:3]
 
+    single_blog.visits += 1
+    single_blog.save()
     if request.method == 'POST':
         comment = Comment()
         comment.user = request.user

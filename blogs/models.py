@@ -30,6 +30,7 @@ class Blog(models.Model):
     short_description = models.TextField(max_length=500)
     blog_body = models.TextField(max_length=20000)
     status = models.CharField(max_length=24,choices=STATUS_CHOICES, default='Draft')
+    visits = models.IntegerField(default=0)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
